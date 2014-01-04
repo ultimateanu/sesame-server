@@ -2,15 +2,25 @@ package main
 
 import (
 	"fmt"
+	"github.com/ultimateanu/sesame-server/filesystem"
 	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/", homeHandler)
-	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, r.URL.Path[1:])
-	})
-	panic(http.ListenAndServe(":8484", nil))
+	//videos, _ := filesystem.GetAllVideoFiles("/Users/anu/Movies")
+	videos, _ := filesystem.GetAllVideoFiles("/Users/anu/Downloads")
+
+	for _, v := range videos {
+		fmt.Println(v.Name)
+	}
+
+	/*
+		http.HandleFunc("/", homeHandler)
+		http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, r.URL.Path[1:])
+		})
+		panic(http.ListenAndServe(":8484", nil))
+	*/
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
