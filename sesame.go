@@ -3,31 +3,46 @@ package main
 import (
 	"fmt"
 	"github.com/ultimateanu/sesame-server/filesystem"
-	"net/http"
+	"log"
+	//"net/http"
+	//"os"
+	"github.com/docopt/docopt.go"
 )
 
 func main() {
-	//videos, _ := filesystem.GetAllVideoFiles("/Users/anu/Movies")
-	videos, _ := filesystem.GetAllVideoFiles("/Users/anu/Downloads")
+	usage := `Sesame Server
 
-	for _, v := range videos {
-		fmt.Println(v.Name)
+  Usage:
+  sesame-server <directory or file>...
+
+  Options:
+  -h --help     Show this screen.
+  --version     Show version.`
+
+	arguments, _ := docopt.Parse(usage, nil, true, "Sesame Server 0.1", false)
+
+	videos := make([]*filesystem.Video, 0, 10)
+	for _, fileOrDir := range arguments["<directory or file>"].([]string) {
+		if filesystem.IsFile(fileOrDir) {
+			video, err := filesystem.GetVideoFile(fileOrDir)
+			if err != nil {
+				log.Print(err)
+			} else {
+				videos = append(videos, video)
+			}
+		} else if filesystem.IsDir(fileOrDir) {
+			vids, err := filesystem.GetAllVideoFiles(fileOrDir)
+			if err != nil {
+				log.Print(err)
+			} else {
+				videos = append(videos, vids...)
+			}
+		} else {
+			log.Print(fileOrDir + " is invalid")
+		}
 	}
 
-	/*
-		http.HandleFunc("/", homeHandler)
-		http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, r.URL.Path[1:])
-		})
-		panic(http.ListenAndServe(":8484", nil))
-	*/
-}
-
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.RemoteAddr)
-	fmt.Fprintf(w, `<html><head></head><body><h1>Bommarillu</h1><center>
-  <video width="720" height="480" poster="static/bom.jpg" controls><source src="static/bom.mp4" type="video/mp4">Your browser does not support the video tag.</video>
-  <br><br>
-  
-  </center></body></html>`)
+	for _, v := range videos {
+		fmt.Println(*v)
+	}
 }
