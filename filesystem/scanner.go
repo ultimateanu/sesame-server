@@ -40,7 +40,9 @@ func GetVideoFiles(p string) ([]*Video, error) {
 
 	videos := make([]*Video, 0, 10)
 	for _, file := range files {
-		if !file.IsDir() && strings.HasSuffix(file.Name(), ".mp4") {
+    //TODO
+		//if !file.IsDir() && strings.HasSuffix(file.Name(), ".mp4") {
+		if !file.IsDir(){
 			videos = append(videos, &Video{file.Name(), path.Join(p, file.Name()), file.Size()})
 		}
 	}

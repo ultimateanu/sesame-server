@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/docopt/docopt.go"
 	"github.com/ultimateanu/sesame-server/filesystem"
 	"github.com/ultimateanu/sesame-server/server"
 	"io/ioutil"
 	"log"
-	"strconv"
 )
 
 var (
@@ -70,24 +68,4 @@ func main() {
 	}
 
 	server.ServeVideos(videos, tempdir, port)
-}
-
-func parseArguments() {
-	usage := `Sesame Server
-
-Usage:
-    sesame-server [--port=<p>] <directory or file>... 
-
-Options:
-    -h --help        Show this screen.
-    -p --port=<p>    Port to serve on [default: 8080].
-    --version        Show version.`
-
-	arguments, _ := docopt.Parse(usage, nil, true, "Sesame Server 0.1", true)
-	port, err = strconv.Atoi(arguments["--port"].(string))
-
-	if err != nil {
-		log.Fatalln("Please specify a valid port")
-	}
-	filesAndDirs = arguments["<directory or file>"].([]string)
 }
