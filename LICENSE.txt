@@ -2,8 +2,6 @@
 
 Sesame server uses the following awesome open source projects:
 
-
-
 ==================================================================================
 docopt (https://github.com/docopt/docopt.go). Original license below.
 ----------------------------------------------------------------------------------
