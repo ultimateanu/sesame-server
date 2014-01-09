@@ -43,7 +43,7 @@ func main() {
 		log.Fatalln("no local ip address detected")
 	}
 	for _, ip := range localIp {
-		fmt.Printf("Serving videos at http://%s:%d\n", ip, port)
+		fmt.Printf("Serving files at http://%s:%d\n", ip, port)
 	}
 
 	server.ServeVideos(port, files)
