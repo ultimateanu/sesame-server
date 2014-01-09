@@ -10,7 +10,7 @@ const (
 	htmlEnd   = "</center></body></html"
 )
 
-func GenerateMainPage(videos []*filesystem.Video, dir string) (html string) {
+func GenerateMainPage(videos []*filesystem.File, dir string) (html string) {
 	html = htmlStart
 	for _, video := range videos {
 		html += `<video width="720" height="480" preload="metadata" controls><source src="`

@@ -1,8 +1,10 @@
 package server
 
 import (
+	"html"
 	"net"
 	"os"
+	"strings"
 )
 
 func GetLocalIp() ([]string, error) {
@@ -17,4 +19,9 @@ func GetLocalIp() ([]string, error) {
 	}
 
 	return addrs, nil
+}
+
+func Escape(s string) string {
+	s = html.EscapeString(s)
+	return strings.Replace(s, " ", "&nbsp;", -1)
 }
