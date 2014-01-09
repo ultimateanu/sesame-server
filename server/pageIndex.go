@@ -24,7 +24,7 @@ func MakeFilesIndexPage(s Store) string {
 	indexPage := indexHtmlStart
 	for i, f := range *s {
 		indexPage += fmt.Sprintf("\n\t<li>%s [<a href=\"%d\" download=\"%s\">%s</a>]</li>",
-			Escape(f.Name), i, Escape(f.Name), Escape(humanize.IBytes(uint64(f.Size))))
+			Escape(f.Name), i, Escape(f.Name), Escape(humanize.Bytes(uint64(f.Size))))
 	}
 	indexPage += indexHtmlEnd
 
