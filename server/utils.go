@@ -1,10 +1,9 @@
 package server
 
 import (
-	"html"
 	"net"
 	"os"
-	"strings"
+	"unicode"
 )
 
 func GetLocalIp() ([]string, error) {
@@ -21,7 +20,20 @@ func GetLocalIp() ([]string, error) {
 	return addrs, nil
 }
 
+/*
 func Escape(s string) string {
 	s = html.EscapeString(s)
 	return strings.Replace(s, " ", "&nbsp;", -1)
+}
+*/
+
+func UrlSafe(s string) string {
+	r := make([]rune, len(s))
+	for i, c := range s {
+		r[i] = '-'
+		if unicode.IsDigit(c) || unicode.IsLower(c) || unicode.IsUpper(c) || c == '.' || c == '_' || c == '~' {
+			r[i] = c
+		}
+	}
+	return string(r)
 }

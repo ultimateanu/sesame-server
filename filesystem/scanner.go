@@ -53,7 +53,7 @@ func GetFiles(p string) ([]*File, error) {
 			}
 			files = append(files, f...)
 		} else {
-			files = append(files, &File{fileinfo.Name(), filePath, fileinfo.Size()})
+			files = append(files, MakeFile(fileinfo, filePath))
 		}
 	}
 	return files, nil
@@ -69,5 +69,5 @@ func GetFile(p string) (*File, error) {
 		return nil, errors.New(p + " is a directory")
 	}
 
-	return &File{fileinfo.Name(), p, fileinfo.Size()}, nil
+	return MakeFile(fileinfo, p), nil
 }

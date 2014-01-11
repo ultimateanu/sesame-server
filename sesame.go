@@ -38,6 +38,8 @@ func main() {
 		files = filesystem.Filter(files, filesystem.FileExtension(validExt))
 	}
 
+	//log.Println(server.MakeStore(files))
+
 	localIp, err := server.GetLocalIp()
 	if err != nil {
 		log.Fatalln("no local ip address detected")

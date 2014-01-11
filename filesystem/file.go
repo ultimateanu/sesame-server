@@ -1,11 +1,18 @@
 package filesystem
 
-import "strings"
+import (
+	"os"
+	"strings"
+)
 
 type File struct {
 	Name string
 	Path string
 	Size int64
+}
+
+func MakeFile(fileinfo os.FileInfo, p string) *File {
+	return &File{fileinfo.Name(), p, fileinfo.Size()}
 }
 
 func Filter(files []*File, fn func(*File) bool) []*File {
