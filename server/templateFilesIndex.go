@@ -29,6 +29,8 @@ const (
         <td align=right>{{$f.Size | humanize}}</td>
       </tr>{{end}}{{end}}{{end}}
     </table>
+    <br><br><hr>
+    <center>Sesame Server<br>© 2014 Anu Bandi. All Rights Reserved.</center>
   </body>
 </html>`
 )

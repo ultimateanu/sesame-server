@@ -5,6 +5,7 @@ import (
 	"github.com/ultimateanu/sesame-server/filesystem"
 	"github.com/ultimateanu/sesame-server/server"
 	"log"
+	"runtime"
 )
 
 var (
@@ -21,6 +22,7 @@ var (
 )
 
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	parseArguments()
 	files, _ := filesystem.ExtractDirs(filesAndDirs)
 
