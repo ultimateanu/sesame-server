@@ -10,9 +10,10 @@ import (
 )
 
 var (
-	filesIndexHtml string
 	store          *Store
-	validDupPath   = regexp.MustCompile(`^([\d]+)/(.*)$`)
+	filesIndexHtml string
+	dupIndexHtml   map[string]string = make(map[string]string)
+	validDupPath                     = regexp.MustCompile(`^([\d]+)/(.*)$`)
 )
 
 func ServeFiles(port int, files []*filesystem.File) (err error) {
@@ -46,13 +47,17 @@ func fileHandler(w http.ResponseWriter, r *http.Request) {
 	} else if store.Count(fileName) == 1 {
 		ServeFile(w, r, fileName, 0)
 	} else {
-		//TODO cache
-		hts, err := store.GetDupIndexPage(fileName)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+		//Lazy loading
+		if dupIndexHtml[fileName] == "" {
+			html, err := store.GetDupIndexPage(fileName)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			dupIndexHtml[fileName] = html
 		}
-		fmt.Fprintf(w, hts)
+
+		fmt.Fprintf(w, dupIndexHtml[fileName])
 	}
 }
 
