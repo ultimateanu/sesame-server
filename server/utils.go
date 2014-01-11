@@ -23,7 +23,8 @@ func UrlSafe(s string) string {
 	r := make([]rune, len(s))
 	for i, c := range s {
 		r[i] = '-'
-		if unicode.IsDigit(c) || unicode.IsLower(c) || unicode.IsUpper(c) || c == '.' || c == '_' || c == '~' {
+		if unicode.IsDigit(c) || unicode.IsLower(c) || unicode.IsUpper(c) ||
+			c == '.' || c == '_' || c == '~' {
 			r[i] = c
 		}
 	}

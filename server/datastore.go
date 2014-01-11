@@ -29,6 +29,10 @@ func (s *Store) Contains(fileName string) bool {
 	return true
 }
 
+func (s *Store) Get(fileName string) []*filesystem.File {
+	return (*s).NameMap[fileName]
+}
+
 func (s *Store) GetFile(fileName string, index int) (*filesystem.File, error) {
 	if index >= s.Count(fileName) {
 		return nil, errors.New("store: index out of bounds")

@@ -46,9 +46,13 @@ func fileHandler(w http.ResponseWriter, r *http.Request) {
 	} else if store.Count(fileName) == 1 {
 		ServeFile(w, r, fileName, 0)
 	} else {
-		//TODO make
-		html := ""
-		fmt.Fprintf(w, html)
+		//TODO cache
+		hts, err := store.GetDupIndexPage(fileName)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		fmt.Fprintf(w, hts)
 	}
 }
 
@@ -70,6 +74,7 @@ func ServeFile(w http.ResponseWriter, r *http.Request, fileName string, index in
 		http.NotFound(w, r)
 		return
 	}
+
 	f, err := os.Open(file.Path)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -83,3 +88,5 @@ func ServeFile(w http.ResponseWriter, r *http.Request, fileName string, index in
 
 	http.ServeContent(w, r, fileinfo.Name(), fileinfo.ModTime(), f)
 }
+
+//TODO: add content-disposition header to start download with proper name
