@@ -38,8 +38,6 @@ func main() {
 		files = filesystem.Filter(files, filesystem.FileExtension(validExt))
 	}
 
-	//log.Println(server.MakeStore(files))
-
 	localIp, err := server.GetLocalIp()
 	if err != nil {
 		log.Fatalln("no local ip address detected")
@@ -48,5 +46,5 @@ func main() {
 		fmt.Printf("Serving files at http://%s:%d\n", ip, port)
 	}
 
-	server.ServeVideos(port, files)
+	server.ServeFiles(port, files)
 }

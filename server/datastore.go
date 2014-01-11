@@ -6,8 +6,7 @@ import (
 )
 
 type Store struct {
-	NameMap    map[string][]*filesystem.File
-	FilesIndex string
+	NameMap map[string][]*filesystem.File
 }
 
 func MakeStore(files []*filesystem.File) *Store {
@@ -16,25 +15,18 @@ func MakeStore(files []*filesystem.File) *Store {
 		urlSafeName := UrlSafe(f.Name)
 		m[urlSafeName] = append(m[urlSafeName], f)
 	}
-	return &Store{m, ""}
-}
-
-func (s *Store) Contains(fileName string) bool {
-	if len((*s).NameMap[fileName]) == 0 {
-		return false
-	}
-	return true
+	return &Store{m}
 }
 
 func (s *Store) Count(fileName string) int {
 	return len((*s).NameMap[fileName])
 }
 
-func (s *Store) Get(fileName string) []*filesystem.File {
-	if !s.Contains(fileName) {
-		return nil
+func (s *Store) Contains(fileName string) bool {
+	if s.Count(fileName) == 0 {
+		return false
 	}
-	return s.NameMap[fileName]
+	return true
 }
 
 func (s *Store) GetFile(fileName string, index int) (*filesystem.File, error) {

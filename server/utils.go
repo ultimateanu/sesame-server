@@ -16,16 +16,8 @@ func GetLocalIp() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return addrs, nil
 }
-
-/*
-func Escape(s string) string {
-	s = html.EscapeString(s)
-	return strings.Replace(s, " ", "&nbsp;", -1)
-}
-*/
 
 func UrlSafe(s string) string {
 	r := make([]rune, len(s))
