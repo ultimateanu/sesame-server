@@ -13,7 +13,7 @@ const (
   </head>
   <body>
     <h1>Multiple Files</h1>
-    <table border="1" cellspacing="0" cellpadding="4">
+    <table border="1" cellspacing="0" cellpadding="6">
       <tr>
         <th></th>
         <th>File</th>
