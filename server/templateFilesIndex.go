@@ -17,14 +17,27 @@ const (
     <h1>Files Index</h1>
     <table border="1" cellspacing="0" cellpadding="4">
       <tr>
+        <th></th>
         <th>File</th>
         <th>Size</th>
       </tr>{{range $fileName, $files := .NameMap}}{{if $files | multiple}}{{range $i, $f := $files}}
       <tr>
+        <td>
+          <form action="/dupfiles/{{$i}}/{{$fileName}}">
+            <input type="hidden" name="dl" value="1" /> 
+            <input type="submit" value="download">
+          </form>
+        </td>
         <td><a href="/dupfiles/{{$i}}/{{$fileName}}">{{$f.Name}}</a></td>
         <td align=right>{{$f.Size | humanize}}</td>
       </tr>{{end}}{{else}}{{range $i, $f := $files}}
       <tr>
+        <td>
+          <form action="/files/{{$fileName}}">
+            <input type="hidden" name="dl" value="1" /> 
+            <input type="submit" value="download">
+          </form>
+        </td>
         <td><a href="/files/{{$fileName}}">{{$f.Name}}</a></td>
         <td align=right>{{$f.Size | humanize}}</td>
       </tr>{{end}}{{end}}{{end}}

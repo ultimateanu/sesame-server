@@ -91,7 +91,8 @@ func ServeFile(w http.ResponseWriter, r *http.Request, fileName string, index in
 		return
 	}
 
+	if r.URL.Query().Get("dl") == "1" {
+		w.Header().Add("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, file.Name))
+	}
 	http.ServeContent(w, r, fileinfo.Name(), fileinfo.ModTime(), f)
 }
-
-//TODO: add content-disposition header to start download with proper name
