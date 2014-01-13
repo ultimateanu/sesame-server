@@ -12,36 +12,15 @@ var (
 	port         int
 	filesAndDirs []string
 	fileFilters  []filesystem.FileFilter
-	err          error
-	videoFiles   bool
-	audioFiles   bool
-	imageFiles   bool
-	validExt     []string
-	videoExt     []string = []string{"mp4", "avi", "mkv", "wmv"}
-	audioExt     []string = []string{"mp3", "wma", "aac"}
-	imageExt     []string = []string{"jpg", "jpeg", "png"}
 )
 
-func main() {
+func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	parseArguments()
+}
 
-	//filters := []filesystem.FileFilter{filesystem.IgnoreSystemFiles}
+func main() {
 	files, _ := filesystem.ScanDirs(filesAndDirs, fileFilters)
-
-	if videoFiles {
-		validExt = append(validExt, videoExt...)
-	}
-	if audioFiles {
-		validExt = append(validExt, audioExt...)
-	}
-	if imageFiles {
-		validExt = append(validExt, imageExt...)
-	}
-
-	if len(validExt) != 0 {
-		files = filesystem.Filter(files, filesystem.FileExtension(validExt))
-	}
 
 	localIp, err := server.GetLocalIp()
 	if err != nil {

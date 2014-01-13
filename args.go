@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/docopt/docopt.go"
 	"github.com/dustin/go-humanize"
 	"github.com/ultimateanu/sesame-server/filesystem"
@@ -9,8 +8,13 @@ import (
 	"strconv"
 )
 
-const (
-	usage = `
+var (
+	videoExts []string = []string{"mp4", "avi", "mkv", "wmv"}
+	audioExts []string = []string{"mp3", "wma", "aac"}
+	imageExts []string = []string{"jpg", "jpeg", "png"}
+)
+
+const usage = `
 Sesame Server
 
 Usage:
@@ -36,13 +40,11 @@ Help:
 
     /files/ will have a simple list of all files being served
 `
-)
 
 func parseArguments() {
+	var err error
 	arguments, _ := docopt.Parse(usage, nil, true, "Sesame Server 0.1", true)
-
-	fmt.Println(arguments)
-
+	filesAndDirs = arguments["<directory or file>"].([]string)
 	port, err = strconv.Atoi(arguments["--port"].(string))
 	if err != nil {
 		log.Fatalln("Please specify a valid port")
@@ -50,10 +52,12 @@ func parseArguments() {
 
 	fileFilters = append(fileFilters, filesystem.AllFiles)
 
+	// system files filter
 	if !arguments["--sysfiles"].(bool) {
 		fileFilters = append(fileFilters, filesystem.IgnoreSystemFiles)
 	}
 
+	// file size filters
 	if arguments["--min"] != nil {
 		minSize, err := humanize.ParseBytes(arguments["--min"].(string))
 		if err != nil {
@@ -61,7 +65,6 @@ func parseArguments() {
 		}
 		fileFilters = append(fileFilters, filesystem.MinFilter(minSize))
 	}
-
 	if arguments["--max"] != nil {
 		maxSize, err := humanize.ParseBytes(arguments["--max"].(string))
 		if err != nil {
@@ -70,9 +73,18 @@ func parseArguments() {
 		fileFilters = append(fileFilters, filesystem.MaxFilter(maxSize))
 	}
 
-	videoFiles = arguments["video"].(bool)
-	audioFiles = arguments["audio"].(bool)
-	imageFiles = arguments["image"].(bool)
-
-	filesAndDirs = arguments["<directory or file>"].([]string)
+	// file type filters
+	var extensions []string
+	if arguments["video"].(bool) {
+		extensions = append(extensions, videoExts...)
+	}
+	if arguments["audio"].(bool) {
+		extensions = append(extensions, audioExts...)
+	}
+	if arguments["image"].(bool) {
+		extensions = append(extensions, imageExts...)
+	}
+	if len(extensions) > 0 {
+		fileFilters = append(fileFilters, filesystem.ExtensionFilter(extensions))
+	}
 }
