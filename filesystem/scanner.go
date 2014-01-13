@@ -1,73 +1,45 @@
 package filesystem
 
 import (
-	"errors"
-	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 )
 
-func ExtractDirs(paths []string) ([]*File, error) {
-	files := make([]*File, 0, 10)
+func ScanDirs(paths []string, filters []FileFilter) ([]*File, error) {
+	allfiles := make([]*File, 0)
 	for _, p := range paths {
-		f, err := ExtractDir(p)
+		files, err := ScanDir(p, filters)
 		if err != nil {
 			return nil, err
 		}
-		files = append(files, f...)
+		allfiles = append(allfiles, files...)
 	}
-	return files, nil
+	return allfiles, nil
 }
 
-func ExtractDir(p string) (files []*File, err error) {
-	files = make([]*File, 0, 10)
-	if IsFile(p) {
-		var file *File
-		file, err = GetFile(p)
-		files = append(files, file)
-	} else if IsDir(p) {
-		files, err = GetFiles(p)
-	} else {
-		err = errors.New(p + " is neither a file nor a directory")
-	}
-
-	if err != nil {
-		return nil, err
-	}
-	return
-}
-
-func GetFiles(p string) ([]*File, error) {
-	fileinfos, err := ioutil.ReadDir(p)
-	if err != nil {
-		return nil, err
-	}
-
-	files := make([]*File, 0, 10)
-	for _, fileinfo := range fileinfos {
-		filePath := path.Join(p, fileinfo.Name())
-		if fileinfo.IsDir() {
-			f, err := GetFiles(filePath)
-			if err != nil {
-				return nil, err
-			}
-			files = append(files, f...)
-		} else {
-			files = append(files, MakeFile(fileinfo, filePath))
+func ScanDir(p string, filters []FileFilter) ([]*File, error) {
+	var fileInfos []*File
+	walkFunc := func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
 		}
-	}
-	return files, nil
-}
 
-func GetFile(p string) (*File, error) {
-	fileinfo, err := os.Stat(p)
+		includeFile := true
+		for _, filter := range filters {
+			if !filter(info) {
+				includeFile = false
+			}
+		}
+		if includeFile {
+			fileInfos = append(fileInfos, MakeFile(info, path))
+		}
+
+		return nil
+	}
+
+	err := filepath.Walk(p, walkFunc)
 	if err != nil {
 		return nil, err
 	}
-
-	if fileinfo.IsDir() {
-		return nil, errors.New(p + " is a directory")
-	}
-
-	return MakeFile(fileinfo, p), nil
+	return fileInfos, nil
 }

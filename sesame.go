@@ -11,6 +11,7 @@ import (
 var (
 	port         int
 	filesAndDirs []string
+	fileFilters  []filesystem.FileFilter
 	err          error
 	videoFiles   bool
 	audioFiles   bool
@@ -24,7 +25,9 @@ var (
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	parseArguments()
-	files, _ := filesystem.ExtractDirs(filesAndDirs)
+
+	//filters := []filesystem.FileFilter{filesystem.IgnoreSystemFiles}
+	files, _ := filesystem.ScanDirs(filesAndDirs, fileFilters)
 
 	if videoFiles {
 		validExt = append(validExt, videoExt...)
