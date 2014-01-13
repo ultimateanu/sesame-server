@@ -17,11 +17,15 @@ var (
 func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	parseArguments()
+	printLocalIp()
 }
 
 func main() {
 	files, _ := filesystem.ScanDirs(filesAndDirs, fileFilters)
+	server.ServeFiles(port, files)
+}
 
+func printLocalIp() {
 	localIp, err := server.GetLocalIp()
 	if err != nil {
 		log.Fatalln("no local ip address detected")
@@ -29,6 +33,4 @@ func main() {
 	for _, ip := range localIp {
 		fmt.Printf("Serving files at http://%s:%d\n", ip, port)
 	}
-
-	server.ServeFiles(port, files)
 }
