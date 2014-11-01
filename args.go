@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/docopt/docopt.go"
+	"github.com/docopt/docopt-go"
 	"github.com/dustin/go-humanize"
 	"github.com/ultimateanu/sesame-server/filesystem"
 	"log"
