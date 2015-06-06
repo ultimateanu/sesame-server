@@ -15,7 +15,6 @@ var (
 )
 
 func init() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
 	parseArguments()
 	printLocalIp()
 }
