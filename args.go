@@ -14,33 +14,6 @@ var (
 	imageExts []string = []string{"jpg", "jpeg", "png"}
 )
 
-const usage = `
-Sesame Server
-
-Usage:
-    sesame-server [options] [video audio image] <directory or file>... 
-
-Options:
-    -p --port=<p>    Port to serve on [default: 8080].
-    -m --min=<m>     Minimum file size (ex: 50b, 10kib)
-    -M --max=<M>     Maximum file size (ex: 100mb, 4gb)
-    -s --sysfiles    Include hidden files.
-    -h --help        Show this screen.
-    --version        Show version.
-
-Help:
-    $ sesame-server /Users/anu/Documents/
-        Serves all files in the Documents directory
-
-    $ sesame-server video audio /Users/anu/Downloads/
-        Serves video & audio files in the Downloads directory
-
-    $ sesame-server -p 8888 /Users/anu/Documents/report.doc /Users/anu/Documents/report.pdf
-        Serves report.doc & report.pdf on port 8888
-
-    /files/ will have a simple list of all files being served
-`
-
 func parseArguments() {
 	var err error
 	arguments, _ := docopt.Parse(usage, nil, true, "Sesame Server 0.1", true)
@@ -88,3 +61,30 @@ func parseArguments() {
 		fileFilters = append(fileFilters, filesystem.ExtensionFilter(extensions))
 	}
 }
+
+const usage = `
+Sesame Server
+
+Usage:
+    sesame-server [options] [video audio image] <directory or file>... 
+
+Options:
+    -p --port=<p>    Port to serve on [default: 8080].
+    -m --min=<m>     Minimum file size (ex: 50b, 10kib)
+    -M --max=<M>     Maximum file size (ex: 100mb, 4gb)
+    -s --sysfiles    Include hidden files.
+    -h --help        Show this screen.
+    --version        Show version.
+
+Help:
+    $ sesame-server /Users/anu/Documents/
+        Serves all files in the Documents directory
+
+    $ sesame-server video audio /Users/anu/Downloads/
+        Serves video & audio files in the Downloads directory
+
+    $ sesame-server -p 8888 /Users/anu/Documents/report.doc /Users/anu/Documents/report.pdf
+        Serves report.doc & report.pdf on port 8888
+
+    /files/ will have a simple list of all files being served
+`
